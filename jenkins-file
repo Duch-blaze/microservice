@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REPO = "duch99"
+        TAG = "${BUILD_NUMBER}"
+        CREDS = credentials('Docker_credentials')
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/Duch-blaze/microservice.git'
+            }
+        }
+
+        stage('Build Images') {
+            steps {
+                script {
+                    docker.build("${DOCKER_REPO}/user-service:${TAG}", "./user-service")
+                }
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                sh """
+                echo ${CREDS_PSW} | docker login -u ${CREDS_USR} --password-stdin
+                """
+            }
+        }
+
+        stage('Push Images') {
+            steps {
+                sh """
+                docker push ${DOCKER_REPO}/user-service:${TAG}
+                docker push ${DOCKER_REPO}/task-service:${TAG}
+                docker push ${DOCKER_REPO}/notification-service:${TAG}
+                """
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh """
+                kubectl set image deployment/user-service user-service=${DOCKER_REPO}/user-service:${TAG}
+                """
+            }
+        }
+    }
+}
