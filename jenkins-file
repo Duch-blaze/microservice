@@ -35,8 +35,6 @@ pipeline {
             steps {
                 sh """
                 docker push ${DOCKER_REPO}/user-service:${TAG}
-                docker push ${DOCKER_REPO}/task-service:${TAG}
-                docker push ${DOCKER_REPO}/notification-service:${TAG}
                 """
             }
         }
