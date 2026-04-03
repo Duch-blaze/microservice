@@ -9,7 +9,8 @@ app.use(bodyParser.json());
 
 mongoose
     // .connect("mongodb://localhost:27017/users")
-    .connect("mongodb://mongo:27017/users") // Updated for Docker Compose
+    .connect("mongodb://mongodb.mongodb:27017/users") // Updated for Docker Compose
+    //.connect("mongodb://mongo:27017/users") // Updated for Docker Compose
     .then(() => {
         console.log("Connected to MongoDB");
     })
