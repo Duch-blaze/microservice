@@ -40,13 +40,5 @@ pipeline {
                 """
             }
         }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh """
-                kubectl set image deployment/user-service user-service=${DOCKER_REPO}/user-service:${TAG}
-                """
-            }
-        }
     }
 }
