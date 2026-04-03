@@ -32,7 +32,7 @@ let channel, connection;
 async function connectRabbitMQWithRetry(reties = 5, delay = 3000) {
     while (reties) {
         try {
-            connection = await amqp.connect("amqp://rabbitmq");
+            connection = await amqp.connect("amqp://rabbitmq.rabbitmq.svc.cluster.local");
             channel = await connection.createChannel();
             await channel.assertQueue("task_created", { durable: true });
             console.log("Connected to RabbitMQ");
